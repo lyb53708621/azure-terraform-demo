@@ -16,7 +16,11 @@ jobs:
   deploy-dev:
     runs-on: ubuntu-latest
     environment: DEV
-
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_USE_OIDC: true
     defaults:
       run:
         working-directory: env/dev
