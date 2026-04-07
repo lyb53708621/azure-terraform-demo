@@ -1,3 +1,9 @@
+
+variable "hub-sub" {
+  type = string
+  default = "43d3f387-48d5-44d4-973f-32d4254cc4f3"
+}
+
 variable "location" {
   type = string
 }

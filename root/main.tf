@@ -24,6 +24,12 @@ provider "azurerm" {
   }
 }
 
+provider "azurerm" {
+  alias = "hub-sub"
+  subscription_id = var.hub-sub
+  features {}
+}
+
 resource "azurerm_resource_group" "alz2" {
   name     = "rg-alz2-${var.environment}"
   location = var.location
@@ -84,8 +90,9 @@ resource "azurerm_subnet_network_security_group_association" "subnet-2-assoc" {
 
 ## VNET Peering
 data "azurerm_virtual_network" "terraform-hub" {
-  name                = "terraform-hub-vnet"
-  resource_group_name = "terraform-test"
+  provider            = azurerm.hub-sub
+  name                = "hub-vnet"
+  resource_group_name = "rg-hub"
 }
 
 resource "azurerm_virtual_network_peering" "spoke_to_hub" {
@@ -101,6 +108,7 @@ resource "azurerm_virtual_network_peering" "spoke_to_hub" {
 }
 
 resource "azurerm_virtual_network_peering" "hub_to_spoke" {
+  provider                  = azurerm.hub-sub
   name                      = "hub-to-spoke-alz2-${var.environment}"
   resource_group_name       = data.azurerm_virtual_network.terraform-hub.resource_group_name
   virtual_network_name      = data.azurerm_virtual_network.terraform-hub.name
@@ -169,18 +177,18 @@ resource "azurerm_virtual_machine" "vm-app-1" {
   tags = {
     env = "dev"
     app = "alz2"
-    test = "1"
-    tt = "2"
   }
 }
 
 ## MySQL DB
 data "azurerm_private_dns_zone" "mysql-pdz" {
+  provider            = azurerm.hub-sub
   name                = "privatelink.mysql.database.azure.com"
-  resource_group_name = "terraform-test"
+  resource_group_name = "rg-hub"
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "mysql-pdz-link-alz-2" {
+  provider              = azurerm.hub-sub
   name                  = "mysql-pdz-to-vnet-alz-2-${var.environment}"
   resource_group_name   = data.azurerm_private_dns_zone.mysql-pdz.resource_group_name
   private_dns_zone_name = data.azurerm_private_dns_zone.mysql-pdz.name
