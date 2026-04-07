@@ -2,7 +2,7 @@ name: Terraform DEV Deploy
 
 on:
   push:
-    branches: [ DEV ]    
+    branches: [ dev ]    
     paths:
       - "env/dev/**"
       - "root/**"
