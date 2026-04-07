@@ -2,7 +2,7 @@ name: Terraform PRD Deploy
 
 on:
   push:
-    branches: [ prd ]
+    branches: [ main ]
     paths:
       - "env/prd/**"
       - "root/**"
