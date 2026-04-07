@@ -165,7 +165,12 @@ resource "azurerm_virtual_machine" "vm-app-1" {
     type = "SystemAssigned"
   }
 
-  tags = var.tags
+  #tags = var.tags
+  tags = {
+    env = "dev"
+    app = "alz2"
+    test = "1"
+  }
 }
 
 ## MySQL DB
