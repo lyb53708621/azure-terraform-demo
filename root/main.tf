@@ -170,6 +170,7 @@ resource "azurerm_virtual_machine" "vm-app-1" {
     env = "dev"
     app = "alz2"
     test = "1"
+    tt = "2"
   }
 }
 
