@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 jobs:
-  deploy-dev:
+  destroy-dev:
     runs-on: ubuntu-latest
     environment: DEV
     env:

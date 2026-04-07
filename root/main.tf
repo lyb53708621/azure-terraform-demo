@@ -1,36 +1,3 @@
-terraform {
-  required_version = ">= 1.12.0"
-
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~>4.59.0"
-    }
-
-    #    aws = {
-    #      source = "hashicorp/aws"
-    #      version = "= 3.0"
-    #    }
-    #
-    #    kubernetes = {
-    #      source = "hashicorp/kubernetes"
-    #      version = ">= 2.0.0"
-    #    }
-  }
-}
-
-provider "azurerm" {
-  features {
-  }
-}
-
-provider "azurerm" {
-  alias = "hub-sub"
-  subscription_id = var.hub-sub
-  resource_provider_registrations = "none"
-  features {}
-}
-
 resource "azurerm_resource_group" "alz2" {
   name     = "rg-alz2-${var.environment}"
   location = var.location
