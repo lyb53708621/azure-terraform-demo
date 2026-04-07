@@ -8,7 +8,6 @@ on:
       - "root/**"
       - "module/**"
 
-
 permissions:
   id-token: write
   contents: read
