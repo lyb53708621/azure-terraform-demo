@@ -77,7 +77,7 @@ resource "azurerm_subnet_network_security_group_association" "subnet-2-assoc" {
   network_security_group_id = azurerm_network_security_group.nsg-alz-2.id
 
   depends_on = [
-    azurerm_subnet.vnet-alz-1-subnet-2,
+    azurerm_subnet.vnet-alz-2-subnet-2,
     azurerm_network_security_group.nsg-alz-1
   ]
 }
