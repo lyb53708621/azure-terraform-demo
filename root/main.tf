@@ -188,11 +188,10 @@ resource "azurerm_mysql_flexible_server" "db-mysql" {
   sku_name               = var.mysql_sku_name
   public_network_access  = "Enabled"
 
-  high_availability {
-    mode = "Disabled"
+#  high_availability {
   #  mode = "ZoneRedundant"
   #  standby_availability_zone = 3
-  }
+#  }
 
   storage {
     auto_grow_enabled = true
