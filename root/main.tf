@@ -189,8 +189,9 @@ resource "azurerm_mysql_flexible_server" "db-mysql" {
   public_network_access  = "Enabled"
 
   high_availability {
-    mode = "ZoneRedundant"
-    standby_availability_zone = 3
+    mode = "Disabled"
+  #  mode = "ZoneRedundant"
+  #  standby_availability_zone = 3
   }
 
   storage {
