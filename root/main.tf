@@ -186,7 +186,7 @@ resource "azurerm_mysql_flexible_server" "db-mysql" {
   geo_redundant_backup_enabled = false
 #  private_dns_zone_id    = data.azurerm_private_dns_zone.mysql-pdz.id
   sku_name               = var.mysql_sku_name
-  public_network_access  = "Enabled"
+  public_network_access  = "Disabled"
 
 #  high_availability {
   #  mode = "ZoneRedundant"
