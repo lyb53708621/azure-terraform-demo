@@ -24,7 +24,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Azure Login (DEV)
+      - name: Azure Login (PRD)
         uses: azure/login@v1
         with:
           client-id: ${{ secrets.ARM_CLIENT_ID }}

@@ -5,12 +5,16 @@ resource "azurerm_resource_group" "alz2" {
 }
 
 # Network
+## Create NSGs
 resource "azurerm_network_security_group" "nsg-alz-2" {
   name                = "nsg-alz-2-${var.environment}"
   location            = azurerm_resource_group.alz2.location
   resource_group_name = azurerm_resource_group.alz2.name
+
+  tags = var.tags
 }
 
+## Create VNET
 resource "azurerm_virtual_network" "vnet-alz-2" {
   name                = "vnet-alz-2-${var.environment}"
   location            = azurerm_resource_group.alz2.location
@@ -20,6 +24,7 @@ resource "azurerm_virtual_network" "vnet-alz-2" {
   tags = var.tags
 }
 
+## Create Subnets
 resource "azurerm_subnet" "vnet-alz-2-subnet-1" {
   name                 = "app-subnet-1"
   resource_group_name = azurerm_resource_group.alz2.name
@@ -35,6 +40,7 @@ resource "azurerm_subnet" "vnet-alz-2-subnet-2" {
   
 }
 
+## Create NSG Subnet association
 resource "azurerm_subnet_network_security_group_association" "subnet-1-assoc" {
   subnet_id                 = azurerm_subnet.vnet-alz-2-subnet-1.id
   network_security_group_id = azurerm_network_security_group.nsg-alz-2.id
@@ -91,6 +97,7 @@ resource "azurerm_virtual_network_peering" "hub_to_spoke" {
 }
 
 # Test VM 1
+## Create NIC
 resource "azurerm_network_interface" "nic-vm-app-1" {
   name                = "nic-app-vm-1-${var.environment}"
   location            = azurerm_resource_group.alz2.location
@@ -103,6 +110,7 @@ resource "azurerm_network_interface" "nic-vm-app-1" {
   }
 }
 
+## Create VM
 resource "azurerm_virtual_machine" "vm-app-1" {
   name                  = "vm-app-1-${var.environment}"
   location              = azurerm_resource_group.alz2.location
@@ -148,13 +156,15 @@ resource "azurerm_virtual_machine" "vm-app-1" {
   }
 }
 
-## MySQL DB
+# Create MySQL DB
+## Import shared mysql PDZ
 data "azurerm_private_dns_zone" "mysql-pdz" {
   provider            = azurerm.hub-sub
   name                = "privatelink.mysql.database.azure.com"
   resource_group_name = "rg-hub"
 }
 
+## Link PDZ to VNET
 resource "azurerm_private_dns_zone_virtual_network_link" "mysql-pdz-link-alz-2" {
   provider              = azurerm.hub-sub
   name                  = "mysql-pdz-to-vnet-alz-2-${var.environment}"
@@ -163,6 +173,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "mysql-pdz-link-alz-2" 
   virtual_network_id    = azurerm_virtual_network.vnet-alz-2.id
 }
 
+## Create MySQL DB
 resource "azurerm_mysql_flexible_server" "db-mysql" {
   name                   = "db-alz2-mysql-${var.environment}"
   resource_group_name    = azurerm_resource_group.alz2.name
@@ -175,7 +186,7 @@ resource "azurerm_mysql_flexible_server" "db-mysql" {
   geo_redundant_backup_enabled = false
 #  private_dns_zone_id    = data.azurerm_private_dns_zone.mysql-pdz.id
   sku_name               = var.mysql_sku_name
-  public_network_access  = "Disabled"
+  public_network_access  = "Enabled"
 
   high_availability {
     mode = "ZoneRedundant"
@@ -199,6 +210,7 @@ resource "azurerm_mysql_flexible_server" "db-mysql" {
   depends_on = [azurerm_private_dns_zone_virtual_network_link.mysql-pdz-link-alz-2]
 }
 
+## Create Private Endpoint for MySQL
 resource "azurerm_private_endpoint" "db-mysql-pe" {
   name                  = "db-alz2-mysql-pe-${var.environment}"
   location              = azurerm_resource_group.alz2.location
