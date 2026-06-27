@@ -1,4 +1,3 @@
-# Add comments
 module "platform" {
   source = "../../root"
 
